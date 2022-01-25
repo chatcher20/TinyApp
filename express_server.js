@@ -14,3 +14,15 @@ app.get("/", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
+
+app.get("/urls.json", (req, res) => {
+  res.json(urlDatabase);
+});
+
+
+// Note: Any changes to your express_server.js file require you to restart the server.
+// Meaning, re-run node express_server.js in server terminal window.
+
+app.get("/hello", (req, res) => {
+  res.send("<html><body>Hello <b>World</b></body></html>\n");
+});
