@@ -18,6 +18,12 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+const templateVars = {
+  shortURL: null, 
+  longURL: null,
+  urls: urlDatabase
+};
+
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
@@ -44,23 +50,42 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  const templateVars = { urls: urlDatabase };
+  templateVars["urls"] = urlDatabase;
   res.render("urls_index", templateVars);   //passing templateVars object into urls_index
 });
 
 app.get("/urls/:shortURL", (req, res) => {      // The : in front of shortURL indicates that shortURL is a route parameter.
-  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] /* What goes here? */ };
+  
+    templateVars["shortURL"] = req.params.shortURL;
+    templateVars["longURL"] = urlDatabase[req.params.shortURL]; 
+  
   res.render("urls_show", templateVars);     // //passing templateVars object into urls_show
 });
 
-app.post("/urls", (req, res) => {
-  console.log(req.body);  // Log the POST request body to the console
-  res.send("Ok");         // Respond with 'Ok' (we will replace this)
+app.get("/u/:shortURL", (req, res) => {
+  const longURL = urlDatabase[req.params.shortURL];
+  res.redirect(longURL);
 });
 
-function generateRandomString() {
+app.post("/urls", (req, res) => {
+  const shortURL = generateRandomString(6); 
+  console.log(req.body, shortURL);  // Log the POST request body to the console
+  urlDatabase[shortURL] = req.body["longURL"];
+  console.log(urlDatabase);
+  // res.send("Ok");         // Respond with 'Ok' (we will replace this)
+  res.redirect(`/urls/${shortURL}`); 
+});
 
-  function makeid(length) {
+app.post("/urls/:shortURL/delete", (req, res) => {
+  const key = req.params.shortURL;
+  // console.log(req.body);
+  delete urlDatabase[key];
+  res.redirect('/urls');
+});
+
+
+
+function generateRandomString(length) {
     let result           = '';
     let characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let charactersLength = characters.length;
@@ -68,13 +93,14 @@ function generateRandomString() {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
-  }
-  console.log(makeid(5));
 };
 
 
-// <!-- This would display the string "http://www.lighthouselabs.ca" -->
-// <h1><%= "b2xVn2" %></h1>
 
+
+
+
+
+// Update your express server so that the shortURL-longURL key-value pair are saved to the urlDatabase when it receives a POST request to /urls
 
 
