@@ -66,8 +66,10 @@ app.get("/urls", (req, res) => {
 
 app.get("/urls/:shortURL", (req, res) => {      // The : in front of shortURL indicates that shortURL is a route parameter.
   
-    templateVars["shortURL"] = req.params.shortURL;
-    templateVars["longURL"] = urlDatabase[req.params.shortURL];
+  const templateVars = {};
+
+  templateVars["shortURL"] = req.params.shortURL;
+  templateVars["longURL"] = urlDatabase[req.params.shortURL];
   
   res.render("urls_show", templateVars);     // //passing templateVars object into urls_show
 });
@@ -132,11 +134,58 @@ app.post("/logout", (req, res) => {
 
 
 
+// GET /register endpoint, which returns a registration page templae
+app.get("/register", (req, res) => {
+  const templateVars = { 
+    username: req.cookies["username"],        // note: When accessing an object property using the square brackets ([]) syntax, the key must be quoted (as a string). Otherwise it would be considered a variable name instead of a string literal.
+    users: users,
+    user_id: req.cookies.user_id
+   }   
+  res.render("urls_register", templateVars);
+});
+
+// Global object called users which will be used to store and access the users in the app
+const users = { 
+  "userRandomID": {
+    id: "userRandomID", 
+    email: "user@example.com", 
+    password: "purple-monkey-dinosaur"
+  }
+};
+
+// Create a POST /register endpoint that handles the registration form data:
+app.post("/register", (req, res) => {
+
+  const templateVars = { username: req.cookies["username"] }   // note: When accessing an object property using the square brackets ([]) syntax, the key must be quoted (as a string). Otherwise it would be considered a variable name instead of a string literal.
+  res.render("urls_register", templateVars);
+
+  if (req.body.email === "") {
+    res.statusCode = 400;
+    res.redirect("urls_register");
+  }
+  for (const user in users) {
+    if (req.body.email === users[user].email) {
+      res.statusCode = 400;
+      res.redirect("urls_register");
+    }
+  }
+  const newUserID = generateRandomString(6)      // This endpoint should add a new user object to the global users object. The user object should include the user's id, email and password, similar to the example above. To generate a random user ID, use the same function you use to generate random IDs for URLs.
+  users[newUserID] = {
+    id: "newUserID",
+    email: req.body.email, 
+    password: req.body.password
+  };
+  res.cookie("user_id", newUserID);  // After adding the user, set a user_id cookie containing the user's newly generated ID.
+  console.log("users");
+  res.redirect("/urls");             // Redirect the user to the /urls page.
+});
 
 
 
 
-// Ask mentor why username is not being defined
-// Plug in printer and print out notes 
+
+
+// Login
+
 
 
