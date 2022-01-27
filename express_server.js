@@ -12,22 +12,26 @@
 const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
+const cookieParser = require('cookie-parser')
 
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
 
-const templateVars = {
-  shortURL: null, 
-  longURL: null,
-  urls: urlDatabase
-};
+
+// res.render("urls_index", templateVars);
 
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
+app.use(cookieParser());
+
+
 app.set("view engine", "ejs");
+
+
+// Routes
 
 app.get("/", (req, res) => {
   res.send("Hello!");
@@ -50,14 +54,20 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  templateVars["urls"] = urlDatabase;
+  const templateVars = {
+    shortURL: null, 
+    longURL: null,
+    urls: urlDatabase,
+    username: req.cookies["username"]
+  };
+  // templateVars["urls"] = urlDatabase;
   res.render("urls_index", templateVars);   //passing templateVars object into urls_index
 });
 
 app.get("/urls/:shortURL", (req, res) => {      // The : in front of shortURL indicates that shortURL is a route parameter.
   
     templateVars["shortURL"] = req.params.shortURL;
-    templateVars["longURL"] = urlDatabase[req.params.shortURL]; 
+    templateVars["longURL"] = urlDatabase[req.params.shortURL];
   
   res.render("urls_show", templateVars);     // //passing templateVars object into urls_show
 });
@@ -66,6 +76,25 @@ app.get("/u/:shortURL", (req, res) => {
   const longURL = urlDatabase[req.params.shortURL];
   res.redirect(longURL);
 });
+
+app.post("/urls/:shortURL", (req, res) => {
+  
+  const shortURL = req.params.shortURL;
+  urlDatabase[shortURL] = req.body["longURL"];
+  res.redirect('/urls');
+  //access shortURL the same way as 57
+  // long uRL, access same was as line 77. Extract those 2 things, pdate database object, then redirect back to main page.
+});
+
+function generateRandomString(length) {
+  let result           = '';
+  let characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let charactersLength = characters.length;
+  for (let i = 0; i < length; i++ ) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+};
 
 app.post("/urls", (req, res) => {
   const shortURL = generateRandomString(6); 
@@ -83,24 +112,31 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   res.redirect('/urls');
 });
 
+app.get("_header", function(req, res) {
+  res.render("_header.ejs", {
+      username: username
+  });
+});
+
+app.post("/login", (req, res) => {
+  console.log(req.body.username);
+  res.cookie("username", req.body.username);
+  res.redirect("/urls");
+  console.log(req.body.username);
+});
+
+app.post("/logout", (req, res) => {
+  res.clearCookie("username");
+  res.redirect("/urls");
+});
 
 
-function generateRandomString(length) {
-    let result           = '';
-    let characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let charactersLength = characters.length;
-    for (let i = 0; i < length; i++ ) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-};
 
 
 
 
 
-
-
-// Update your express server so that the shortURL-longURL key-value pair are saved to the urlDatabase when it receives a POST request to /urls
+// Ask mentor why username is not being defined
+// Plug in printer and print out notes 
 
 
