@@ -48,6 +48,16 @@ const findUserByEmail = (email) => {
   return null;
 };
 
+const checkCookie = function(id) {
+  if (users[id]) {
+    return true;
+  }
+  return false;
+};
+
+
+
+
 
 
 
@@ -62,10 +72,15 @@ app.get("/", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  const templateVars = {
-    user_id: req.cookies.user_id
+  let cookie = req.cookies.user_id;
+  if (checkCookie(cookie)) {
+    const templateVars = {
+      user_id: req.cookies.user_id
+    };
+    res.render("urls_new", templateVars);   //passing templateVars object into urls_new
   };
-  res.render("urls_new", templateVars);   //passing templateVars object into urls_new
+  res.status(401).send("Must log in to create URL.");
+  res.redirect("/login");
 });
 
 app.get("/urls/:shortURL", (req, res) => {
