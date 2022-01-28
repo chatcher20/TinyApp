@@ -9,18 +9,20 @@
   <%- include('partials/_header') %>
 </header>
 <body>
-  <h1>Register</h1>
-  <p>already a user? <a href="/login">go back to login</a></p>
+  <h1>Create Account</h1>
+  <p>Already a user? <a href="/login">Click here to login</a></p>
   <form method="POST" action="/register" class="form-inline">
     <div class="form-group">
       
+      <label>Email:</label>
       <input name="email" />
-      <br />
-
-      <label>password</label>
-      <br />
-
-      <button type="submit">Register User</button>
+      
+  
+      <label>Password:</label>
+      <input name="password" />
+      
+      <button type="submit">Login</button>
+      
 
     </div>
   </form>
@@ -30,5 +32,4 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </body>
 </html>
-
 
