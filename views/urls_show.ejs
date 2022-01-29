@@ -14,13 +14,16 @@
       <div class="card-header"></div>
       <div class="card-body">
         <h5 class="card-title">TinyURL for: <%= longURL %></h5>
+        <!-- longURL = urlDatabase[req.params.shortURL].longURL, -->
+
+
 
         <form method = "POST" action = "/urls/<%= shortURL %>">
           <label>New Long URL:
             <input 
             name = "longURL" 
             type = "text" 
-            placeholder = "New URL here"
+            placeholder = "New Long URL here"
             >
             </label>
           <button 
