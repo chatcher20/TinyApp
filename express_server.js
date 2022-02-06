@@ -40,10 +40,6 @@ let urlDatabase = {
 
 // GET Routes
 
-app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}!`);
-});
-
 app.get("/", (req, res) => {
   const userID = req.session.userID;
   if (userID) {
@@ -318,3 +314,10 @@ app.post("/urls/:shortURL", (req, res) => {
 
 
 // End of POST routes
+
+
+
+
+app.listen(PORT, () => {
+  console.log(`Example app listening on port ${PORT}!`);
+});
