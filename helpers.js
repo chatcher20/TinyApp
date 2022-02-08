@@ -1,8 +1,5 @@
-// Create a function named urlsForUser(id) which returns the URLs where 
-// the userID is equal to the id of the currently logged-in user.
 const urlsForUser = function(id, urlDatabase) {
   const results = {};
-
   for (const i in urlDatabase) {
     if (urlDatabase[i].userID === id) {
       results[i] = urlDatabase[i];
@@ -11,18 +8,6 @@ const urlsForUser = function(id, urlDatabase) {
   return results;
 };
 
-const getOwnerLinks = (ownerID) => {
-  const ownersLinks = {};
-  for (let key in urlDatabase) {
-    if (urlDatabase[key].userID === ownerID) {
-      ownersLinks[key] = urlDatabase[key];
-    }
-    if (urlDatabase[key].userID === "") {
-      ownersLinks[key] = urlDatabase[key];
-    }
-  }
-  return ownersLinks;
-};
 
 const generateRandomString = function(length) {
   let result           = '';
@@ -34,6 +19,7 @@ const generateRandomString = function(length) {
   return result;
 };
 
+
 const checkCookie = function(id) {
   if (users[id]) {
     return true;
@@ -41,43 +27,18 @@ const checkCookie = function(id) {
   return false;
 };
 
-const checkURL = (url) => {
-  
-  url = url.replace(/http:\/\//, "");
-  url = url.replace(/https:\/\//, "");
-
-  //  add 'https://www.'
-  if (url.match(/\./g).length === 1) {
-    url = `https://www.${url}`;
-  }
-
-  // if more than one dot, add 'https://' if missing
-  if (url.search("https://") !== 0) {
-    url = `https://${url}`;
-  }
-
-  return url;
-};
 
 const getUserByEmail = (email) => {
   console.log("here we are get userbyemail");
   for (const userID in users) {
     if(users[userID].email === email) {
       console.log("get user ", users[userID]);
-      return users[userID];                  // deleted .id
+      return users[userID];
     }
   }
   return null;
 };
 
-const getUserID = (id) => {
-  for (let userID in users) {
-    if (id === userID) {
-      return userID;
-    }
-  }
-  return null;
-};
 
 const users = {
   "userRandomID": {
@@ -86,6 +47,7 @@ const users = {
     password: "purple-monkey-dinosaur"
   }
 };
+
 
 let urlDatabase = {
   "abcdef": {
