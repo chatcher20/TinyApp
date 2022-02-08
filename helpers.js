@@ -1,11 +1,11 @@
 // Create a function named urlsForUser(id) which returns the URLs where 
 // the userID is equal to the id of the currently logged-in user.
-const urlsForUser = function(id) {
+const urlsForUser = function(id, urlDatabase) {
   const results = {};
 
   for (const i in urlDatabase) {
     if (urlDatabase[i].userID === id) {
-      results[i] = urlDatabase[i].longURL;
+      results[i] = urlDatabase[i];
     }
   }
   return results;
@@ -60,9 +60,11 @@ const checkURL = (url) => {
 };
 
 const getUserByEmail = (email) => {
+  console.log("here we are get userbyemail");
   for (const userID in users) {
     if(users[userID].email === email) {
-      return users[userID].id;
+      console.log("get user ", users[userID]);
+      return users[userID];                  // deleted .id
     }
   }
   return null;
@@ -100,5 +102,7 @@ module.exports = {
   generateRandomString,
   checkURL,
   getUserID,
-  checkCookie
+  checkCookie,
+  users,
+  urlDatabase
 };
