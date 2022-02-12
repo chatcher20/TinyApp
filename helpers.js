@@ -60,10 +60,7 @@ let urlDatabase = {
 module.exports = {
   getUserByEmail,
   urlsForUser,
-  getOwnerLinks,
   generateRandomString,
-  checkURL,
-  getUserID,
   checkCookie,
   users,
   urlDatabase
